@@ -35,19 +35,22 @@ function gen_table(json) {
 			periodstr = period;
 			
 			startTime = it[listOfDays[day]][`Period ${period}`].startTime;
-			if(teacher !== "") {
+			if(subject !== "") {
 				tableIn += `<td id="timetableTd1" style="padding-left: 14px;">P${periodstr}: ${subject} <br></td>`;
+				tableIn += `<td id="startTimeTd" style="padding-left: 7px">${room}</td>`;
 			}
 			else if (room === "Sport"){
-				tableIn += `<td id="timetableTd1" style="padding-left: 14px;">Sports</td>`;
+				tableIn += `<td id="timetableTd1" style="padding-left: 14px;">Sport</td>`;
+				tableIn += `<td></td>`
 			}
 			else if (room === "Scripture"){
 				tableIn += `<td id="timetableTd1" style="padding-left: 14px;">Scripture</td>`
+				tableIn += `<td></td>`
 			}
 			else {
 				tableIn += `<td id="timetableTd1" style="padding-left: 14px;">Free Period</td>`;
+				tableIn += `<td></td>`
 			}
-			tableIn += `<td id="startTimeTd" style="padding-left: 7px">${room}</td>`;
 			tableIn += `<td id="startTimeTd" style="padding-left: 7px">${startTime}</td>`;
 			tableIn += "</tr>";
 			period++;

@@ -79,7 +79,7 @@ async function icalProcess() {
 		//	subject is in .summary
 		//	location is in .location
 
-		var listOfDays = ['mondayA', 'tuesdayA', 'wednesdayA', 'thursdayA','fridayA', 'mondayB', 'tuesdayB', 'wednesdayB', 'thursdayB', 'fridayB'];
+		var listOfDays = ['tuesdayA', 'wednesdayA', 'thursdayA','fridayA', 'mondayB', 'tuesdayB', 'wednesdayB', 'thursdayB', 'fridayB', 'mondayA'];
 		var curDay = 0;
 
 		var prevPeriod = 0;
@@ -98,7 +98,7 @@ async function icalProcess() {
 					offset = i
 					
 					//Modify the list
-					listOfDays = ['mondayA', 'tuesdayA', 'wednesdayA', 'thursdayA','fridayA', 'mondayB', 'tuesdayB', 'wednesdayB', 'thursdayB', 'fridayB'];
+					listOfDays = ['tuesdayA', 'wednesdayA', 'thursdayA','fridayA', 'mondayB', 'tuesdayB', 'wednesdayB', 'thursdayB', 'fridayB', 'mondayA'];
 					break;
 				}
 			}
@@ -131,18 +131,17 @@ async function icalProcess() {
 			var hours = periodStart.getHours();
 			var minute = periodStart.getMinutes();
 
-			//Dealing with the description elements
 			var tAndP = description.split("\n");
 			var teacherTitle = tAndP[0].split(" ")[1];
 			var teacherFirstName = tAndP[0].split(" ")[2];
 			var teacherLastName = tAndP[0].split(" ")[3];
 			var teacher = teacherTitle.charAt(0).toUpperCase() + teacherTitle.slice(1).toLowerCase() + " " + teacherLastName.charAt(0).toUpperCase() + teacherLastName.slice(1).toLowerCase();;
-			if(!teacherTitle.startsWith("D") && !teacherTitle.startsWith("M")) teacher = tAndP[0]
+			if(!teacherTitle.startsWith("D") && !teacherTitle.startsWith("M")) teacher = tAndP[0].split("Teacher: ")[1]
 			var period = tAndP[1].split(": ")[1];
-			if(period === "H") period = 1;
+			if(period === "RC") period = 0;
 			//else if(period === "Ass") period = 0;
 			else period = parseInt(tAndP[1].split(": ")[1], 10);
-			if(period === NaN) period = 5
+			if(period === NaN) period = 7
 			console.log("Period " + period)
 			console.log(listOfDays[curDay%10]);
 
@@ -155,32 +154,28 @@ async function icalProcess() {
 			var room = lctn.split(": ")[1];
 			if(!room) room = ""
 			//Bounds check
-
+			console.log(subject1 + " with " + teacher + " at " + room)
 			try{
-				console.log("-------------")
 				//jsonData.timetableData[listOfDays[curDay%10]][`Period ${period}`].startTime = `${hours-1}:${minute.toString().padStart(2, '0')}`;
 				//jsonData.timetableData[listOfDays[curDay%10]][`Period ${period}`].periodLength = (Math.abs(periodEnd - periodStart) / (1000 * 60)).toString();
 				jsonData.timetableData[listOfDays[curDay]][`Period ${period}`].teacher = teacher;
 				jsonData.timetableData[listOfDays[curDay]][`Period ${period}`].subject = subject;
 				jsonData.timetableData[listOfDays[curDay]][`Period ${period}`].class1 = class1;
 				jsonData.timetableData[listOfDays[curDay]][`Period ${period}`].room = room;
-			} catch(e){}
+			} catch(e){
+				console.log(e)
+			}
 			prevPeriod = period;
-
-			if(period === 4) {
+			if(events[i+1].getFirstPropertyValue('description').split("\n")[1].split(": ")[1] === "RC") {
 				curDay += 1;
 			}
 
 			if(curDay >= 10) {
 				break;
 			}
-			console.log(subject1 + " with " + teacher + " at " + room)
 
 			// console.log(jsonData.timetableData[listOfDays[curDay]]);
 			// jsonData.timetableData[listOfDays[curDay]][`Period ${period}`];
-			if(curDay % 5 == 0 && period > 4) {
-				console.log("what")
-			}
 			// console.log(periodStart);
 			// console.log(periodEnd);
 			// console.log(hours + ":" + minute.toString().padStart(2, '0'));
@@ -192,6 +187,7 @@ async function icalProcess() {
 
 
 			// jsonTimetable["teacher"] = events[i].getFirstPropertyValue('description');
+			console.log("-------------")
 		}
 		console.log(jsonData);
 		localStorage.setItem("personalTimetable", JSON.stringify(jsonData));
