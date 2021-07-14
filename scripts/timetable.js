@@ -1,4 +1,4 @@
-// By Chris Ahn and Ethan Du Toit
+// By Chris Ahn and Ethan Du Toit and Joshua Koh
 var listOfDays = ['mondayA', 'tuesdayA', 'wednesdayA', 'thursdayA', 'fridayA', 'mondayB', 'tuesdayB', 'wednesdayB', 'thursdayB', 'fridayB'];
 
 function gen_table(json) {
@@ -32,8 +32,7 @@ function gen_table(json) {
 			room = it[listOfDays[day]][`Period ${period}`].room;
 
 			if(startTime.startsWith("9") || startTime.startsWith("8")) startTime = "0" + startTime;
-			if(listOfDays[day].startsWith('f') && period === 1) periodstr = "H";
-			else periodstr = period;
+			periodstr = period;
 			
 			startTime = it[listOfDays[day]][`Period ${period}`].startTime;
 			if(teacher !== "") {
